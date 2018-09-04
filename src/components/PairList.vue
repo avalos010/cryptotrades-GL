@@ -20,7 +20,7 @@ export default {
   ...mapActions([ 'setPair', 'loadTrades']),
   sendPair() {
     this.setPair(this.pair)
-    this.loadTrades()
+    setInterval(() => this.loadTrades(), 2000);
   },
 
 },

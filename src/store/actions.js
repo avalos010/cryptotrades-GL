@@ -18,7 +18,7 @@ console.log(markets)
  export const loadTrades = async ({commit, state}) => {
    const save = commit;
    const exchange = new ccxt[state.exchange]({proxy: 'https://cors-anywhere.herokuapp.com/' });
-   let since = exchange.milliseconds () - 8640000
+   let since = exchange.seconds () - 2
 
     while(since < exchange.milliseconds()) {
       const symbol = state.pair;
@@ -26,7 +26,9 @@ console.log(markets)
       const trades = await exchange.fetchTrades(symbol, since, limit)
       if(trades.length) {
         since = trades[trades.length - 1]
-        save(LOAD_TRADES, trades)
+        if(state.trades.length == 0 || trades[0].timestamp !== state.trades[0].timestamp)
+        save(LOAD_TRADES, trades.reverse())
+        console.log(trades)
 
       }
       else {
