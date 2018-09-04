@@ -8,7 +8,7 @@ import {LOAD_EXCHANGES, LOAD_PAIRS,LOAD_TRADES,SET_PAIR,SET_EXCHANGE}  from './m
 
 export const loadPairs = async ({commit, state}) => {
 let exchange = state.exchange;
-let chosenExchange = new ccxt[exchange]();
+let chosenExchange = new ccxt[exchange]({proxy: 'https://cors-anywhere.herokuapp.com/' });
 let markets = await chosenExchange.load_markets();
 commit(LOAD_PAIRS, markets)
 console.log(markets)
@@ -17,7 +17,7 @@ console.log(markets)
 
  export const loadTrades = async ({commit, state}) => {
    const save = commit;
-   const exchange = new ccxt[state.exchange]();
+   const exchange = new ccxt[state.exchange]({proxy: 'https://cors-anywhere.herokuapp.com/' });
    let since = exchange.milliseconds () - 8640000
 
     while(since < exchange.milliseconds()) {
@@ -39,7 +39,6 @@ console.log(markets)
 
 
    export const setExchange = ({commit, state}, exchange) => {
-      new ccxt[exchange]().proxy = 'https://crossorigin.me/';
     commit(SET_EXCHANGE, exchange)
 
   }
