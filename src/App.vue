@@ -12,8 +12,13 @@ import Vue from 'vue'
 import GoldenLayout from 'golden-layout';
 import {mapActions} from 'vuex'
 export default {
+  data() {
+    return {
+      pairs: []
+    }
+  },
   mounted() {
-      const config = {
+      let config = {
         content: [{
           type: 'row',
           content: [
@@ -25,7 +30,7 @@ export default {
           {
             type: 'component',
             componentName: 'pairs',
-            componentState: {pair: '', exchange: this.$store.state.exchange}
+            componentState: {pair: '', pairs: []}
           },
           {
             type: 'component',
@@ -35,6 +40,9 @@ export default {
         }]
       }
       const self = this;
+      let savedState = localStorage.getItem('savedState');
+    config = savedState !== null ? JSON.parse(savedState) : config;
+
       const myLayout = new GoldenLayout(config, $('#golden'));
 
       function registerComp(name,componentName){
@@ -47,7 +55,9 @@ export default {
             const vm = new ExchangeListConstructor({
               propsData: {
                 lastState: state || {},
-                goldenlayoutContainer: container
+                goldenlayoutContainer: container,
+                dataMethods: self.methods,
+                pairs: []
               }
             });
                 vm.$mount(`#${name}`)
@@ -55,12 +65,27 @@ export default {
 
       });
     }
-
-    registerComp('exchange-list', 'exchange');
+        myLayout.on('stateChanged', function () {
+    let state = JSON.stringify(myLayout.toConfig());
+    localStorage.setItem('savedState', state);
+});
     registerComp('pair-list', 'pairs');
+    registerComp('exchange-list', 'exchange');
+
     registerComp('trades', 'trades');
+
+
     myLayout.init();
 
+  },
+  methods: {
+        resetLayout(){ 
+            localStorage.removeItem('savedState'); 
+            window.location.reload(true);              
+        },
+        setpairs() {
+          this.pairs = this.$store.state.pairs
+        }
   }
 
   }
