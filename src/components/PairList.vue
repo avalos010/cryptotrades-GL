@@ -1,8 +1,8 @@
 <template>
   <div class="col-md-3 col-lg-3 mt-3 col-sm-12 text-center">
     <label class="text-light">Pair:</label>
-    <select :disabled="pairs.length" @change="sendPair" class="form-control btn btn-dark" v-model="pair">
-      <option v-for="pair in pairs" :value="pair.symbol">{{pair.symbol}}</option>
+    <select :disabled="$store.state.pairs.length"  @change="sendPair" class="form-control btn btn-dark" v-model="pair">
+      <option v-for="pair in glPairs" :value="pair.symbol">{{pair.symbol}}</option>
     </select>
   </div>
 </template>
@@ -18,6 +18,7 @@ export default {
   data() {
     return {
         pair: this.lastState.pair,
+        glPairs: this.lastState.pairs
     }
   },
   methods: {
@@ -25,22 +26,24 @@ export default {
   ...mapGetters(['loadedPairs']),
   sendPair() {
     this.goldenlayoutContainer.extendState({pair: this.pair})
-    // this.goldenlayoutContainer.extendState({pairs: this.$store.state.pairs})
       this.setPair(this.pair)
-       console.log('gl-pairs',this.lastState.pairs)
       console.log('gl-pair',this.lastState.pair)
-      
+
   setInterval(() => this.loadTrades(), 2000);
   },
+
 },
 
-  componentUpdated() {
-  alert('updated')
+created() {
+  if(this.lastState.pair) {
+    console.log(this.lastState.pair)
+    this.setPair(this.lastState.pair)
+    this.goldenlayoutContainer.extendState({pairs: this.$store.state.pairs})
+
+      setInterval(() => this.loadTrades(), 2000);
+  }
 }
-
 }
-
-
 </script>
 
 <style lang="css">

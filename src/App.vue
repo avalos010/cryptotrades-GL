@@ -56,7 +56,6 @@ export default {
               propsData: {
                 lastState: state || {},
                 goldenlayoutContainer: container,
-                dataMethods: self.methods,
                 pairs: []
               }
             });
@@ -64,6 +63,7 @@ export default {
         })
 
       });
+        // myLayout.init()
     }
         myLayout.on('stateChanged', function () {
     let state = JSON.stringify(myLayout.toConfig());
@@ -71,7 +71,6 @@ export default {
 });
     registerComp('pair-list', 'pairs');
     registerComp('exchange-list', 'exchange');
-
     registerComp('trades', 'trades');
 
 
@@ -79,9 +78,9 @@ export default {
 
   },
   methods: {
-        resetLayout(){ 
-            localStorage.removeItem('savedState'); 
-            window.location.reload(true);              
+        resetLayout(){
+            localStorage.removeItem('savedState');
+            window.location.reload(true);
         },
         setpairs() {
           this.pairs = this.$store.state.pairs

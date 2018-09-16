@@ -10,7 +10,7 @@
 <script>
 import { mapActions } from 'vuex';
 export default {
-  props: ['lastState','goldenlayoutContainer','pairs', 'dataMethods'],
+  props: ['lastState','goldenlayoutContainer','pairs'],
   data() {
     return {
       exchange:this.lastState.exchange
@@ -20,14 +20,17 @@ export default {
     ...mapActions(['loadExchanges', 'setExchange', 'loadPairs']),
     sendExchange() {
       this.setExchange(this.exchange)
-      this.goldenlayoutContainer.extendState({exchange: this.exchange}) 
-      console.log(this.dataMethods.setPairs)
-      
+      this.goldenlayoutContainer.extendState({exchange: this.exchange})
+      this.loadPairs()
 
     }
   },
   created() {
     this.loadExchanges()
+    if(this.exchange.length) {
+      this.setExchange(this.exchange)
+      this.loadPairs()
+    }
     console.log(this.lastState)
   }
 
