@@ -10,28 +10,26 @@
 <script>
 import { mapActions } from 'vuex';
 export default {
-  props: ['lastState','goldenlayoutContainer','pairs'],
+  props: ['goldenlayoutContainer','lastState'],
   data() {
     return {
-      exchange:this.lastState.exchange
+      exchange: ''
     }
   },
   methods: {
     ...mapActions(['loadExchanges', 'setExchange', 'loadPairs']),
     sendExchange() {
-      this.setExchange(this.exchange)
       this.goldenlayoutContainer.extendState({exchange: this.exchange})
+        this.setExchange(this.lastState.exchange)
       this.loadPairs()
-
+        console.log(this.lastState.exchange)
     }
   },
-  created() {
+  mounted() {
     this.loadExchanges()
     if(this.exchange.length) {
       this.setExchange(this.exchange)
-      this.loadPairs()
     }
-    console.log(this.lastState)
   }
 
 }

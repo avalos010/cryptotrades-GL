@@ -34,14 +34,15 @@ export default {
           },
           {
             type: 'component',
-            componentName: 'trades'
+            componentName: 'trades',
+            componentState: {trades: []}
           }
         ]
         }]
       }
       const self = this;
-      let savedState = localStorage.getItem('savedState');
-    config = savedState !== null ? JSON.parse(savedState) : config;
+    //   let savedState = localStorage.getItem('savedState');
+    // config = savedState !== null ? JSON.parse(savedState) : config;
 
       const myLayout = new GoldenLayout(config, $('#golden'));
 
@@ -54,9 +55,8 @@ export default {
             });
             const vm = new ExchangeListConstructor({
               propsData: {
-                lastState: state || {},
+                lastState: container.getState() ,
                 goldenlayoutContainer: container,
-                pairs: []
               }
             });
                 vm.$mount(`#${name}`)
@@ -65,10 +65,10 @@ export default {
       });
         // myLayout.init()
     }
-        myLayout.on('stateChanged', function () {
-    let state = JSON.stringify(myLayout.toConfig());
-    localStorage.setItem('savedState', state);
-});
+//         myLayout.on('stateChanged', function () {
+//     let state = JSON.stringify(myLayout.toConfig());
+//     localStorage.setItem('savedState', state);
+// });
     registerComp('pair-list', 'pairs');
     registerComp('exchange-list', 'exchange');
     registerComp('trades', 'trades');
