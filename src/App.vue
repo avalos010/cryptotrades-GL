@@ -63,7 +63,7 @@ export default {
         // myLayout.on('stateChanged', function () {
         //   config = myLayout.toConfig();
         //    localStorage.setItem( 'savedState', state );
-});
+// });
     registerComp('pair-list', 'pairs');
     registerComp('exchange-list', 'exchange');
     registerComp('trades', 'trades');
