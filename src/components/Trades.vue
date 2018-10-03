@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="col-md-6 col-sm-12 col-lg-6">
-    <h3>Trades</h3>
+    <h3 class="text-light">Trades</h3>
   <table class="table table-dark">
-      <h4  v-if="lastState.trades.length === 0">No Data Available</h4>
+      <h4  v-if="vuetrades.length === 0">No Data Available</h4>
     <thead>
        <tr>
          <th scope="col">Date</th>
@@ -13,7 +13,7 @@
 
        </tr>
     </thead>
-    <tr class="text-success" :class="{'text-danger': trade.side == 'sell'}" v-for="trade in lastState.trades">
+    <tr class="text-success" :class="{'text-danger': trade.side == 'sell'}" v-for="trade in vuetrades">
       <td v-text="trade.datetime"></td>
       <td v-text="trade.price"></td>
       <td v-text="trade.amount"></td>
@@ -30,13 +30,14 @@ import {mapActions} from 'vuex';
 export default {
   data() {
     return {
+      vuetrades: {}
     }
   },
   methods: {
     ...mapActions(['loadTrades'])
   },
 props: {
-  goldenlayoutContainer: {required: false},
+  goldenlayoutContainer: {required: true},
   lastState: {required: true},
 },
   computed: {
@@ -48,12 +49,20 @@ props: {
     }
   },
     watch: {
-      trades: function(val) {
-        this.goldenlayoutContainer.extendState({trades: val})
-        console.log('gltrades', this.lastState.trades)
+      trades:function(val) {
+          // console.log(val)
+
       },
-      pair: function(val) {
-        setInterval(() => this.loadTrades(), 3000)
+      pair:async function(val) {
+        await this.loadTrades()
+        this.goldenlayoutContainer.extendState({trades: this.$store.state.trades})
+        this.vuetrades = this.lastState.trades;
+        setInterval(async () => {
+          await this.loadTrades()
+          this.goldenlayoutContainer.extendState({trades: this.$store.state.trades})
+          this.vuetrades = this.lastState.trades;
+        }, 2000)
+
       }
     }
 }
